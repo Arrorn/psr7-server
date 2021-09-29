@@ -20,9 +20,10 @@ interface ServerRequestCreatorInterface
      * If `getallheaders()` is unavailable on the current server it will fallback to its own `getHeadersFromServer()` method.
      * Defaults to php://input for the request body.
      *
+     * @return ServerRequestInterface
      * @throws \InvalidArgumentException if no valid method or URI can be determined
      */
-    public function fromGlobals(): ServerRequestInterface;
+    public function fromGlobals();
 
     /**
      * Create a new server request from a set of arrays.
@@ -34,7 +35,7 @@ interface ServerRequestCreatorInterface
      * @param array|null                           $post    typically $_POST or similar structure, represents parsed request body
      * @param array                                $files   typically $_FILES or similar structure
      * @param StreamInterface|resource|string|null $body    Typically stdIn
-     *
+     * @return ServerRequestInterface
      * @throws \InvalidArgumentException if no valid method or URI can be determined
      */
     public function fromArrays(
@@ -42,15 +43,16 @@ interface ServerRequestCreatorInterface
         array $headers = [],
         array $cookie = [],
         array $get = [],
-        ?array $post = null,
+        array $post = null,
         array $files = [],
         $body = null
-    ): ServerRequestInterface;
+    );
 
     /**
      * Get parsed headers from ($_SERVER) array.
      *
      * @param array $server typically $_SERVER or similar structure
+     * @return array
      */
-    public static function getHeadersFromServer(array $server): array;
+    public static function getHeadersFromServer(array $server);
 }

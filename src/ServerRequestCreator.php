@@ -42,7 +42,7 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
     /**
      * {@inheritdoc}
      */
-    public function fromGlobals(): ServerRequestInterface
+    public function fromGlobals()
     {
         $server = $_SERVER;
         if (false === isset($server['REQUEST_METHOD'])) {
@@ -74,7 +74,7 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
     /**
      * {@inheritdoc}
      */
-    public function fromArrays(array $server, array $headers = [], array $cookie = [], array $get = [], ?array $post = null, array $files = [], $body = null): ServerRequestInterface
+    public function fromArrays(array $server, array $headers = [], array $cookie = [], array $get = [], array $post = null, array $files = [], $body = null)
     {
         $method = $this->getMethodFromEnv($server);
         $uri = $this->getUriFromEnvWithHTTP($server);
@@ -114,8 +114,9 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
 
     /**
      * Implementation from Laminas\Diactoros\marshalHeadersFromSapi().
+     * @return array
      */
-    public static function getHeadersFromServer(array $server): array
+    public static function getHeadersFromServer(array $server)
     {
         $headers = [];
         foreach ($server as $key => $value) {
@@ -149,7 +150,11 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
         return $headers;
     }
 
-    private function getMethodFromEnv(array $environment): string
+    /**
+     * @param  array  $environment
+     * @return string
+     */
+    private function getMethodFromEnv(array $environment)
     {
         if (false === isset($environment['REQUEST_METHOD'])) {
             throw new \InvalidArgumentException('Cannot determine HTTP method');
@@ -158,7 +163,11 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
         return $environment['REQUEST_METHOD'];
     }
 
-    private function getUriFromEnvWithHTTP(array $environment): UriInterface
+    /**
+     * @param  array  $environment
+     * @return UriInterface
+     */
+    private function getUriFromEnvWithHTTP(array $environment)
     {
         $uri = $this->createUriFromArray($environment);
         if (empty($uri->getScheme())) {
@@ -177,7 +186,7 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
      *
      * @throws \InvalidArgumentException for unrecognized values
      */
-    private function normalizeFiles(array $files): array
+    private function normalizeFiles(array $files)
     {
         $normalized = [];
 
@@ -239,7 +248,7 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
      *
      * @return UploadedFileInterface[]
      */
-    private function normalizeNestedFileSpec(array $files = []): array
+    private function normalizeNestedFileSpec(array $files = [])
     {
         $normalizedFiles = [];
 
@@ -261,8 +270,9 @@ final class ServerRequestCreator implements ServerRequestCreatorInterface
      * Create a new uri from server variable.
      *
      * @param array $server typically $_SERVER or similar structure
+     * @return UriInterface
      */
-    private function createUriFromArray(array $server): UriInterface
+    private function createUriFromArray(array $server)
     {
         $uri = $this->uriFactory->createUri('');
 
